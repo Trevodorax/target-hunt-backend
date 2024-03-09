@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -8,21 +8,32 @@ import { CreateUserDto } from './dto/CreateUser.dto';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
   findAll(): Promise<User[]> {
-    return this.usersRepository.find();
+    return this.userRepository.find();
   }
 
-  findOne(id: number): Promise<User | null> {
-    return this.usersRepository.findOneBy({ id });
+  findOneById(id: number): Promise<User | null> {
+    return this.userRepository.findOneBy({ id });
+  }
+
+  findOneByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOneBy({ email });
   }
 
   async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+    await this.userRepository.delete(id);
   }
 
-  async create(user: CreateUserDto): Promise<User> {
-    return this.usersRepository.create(user);
+  async create(user: CreateUserDto): Promise<User | null> {
+    try {
+      const result = await this.userRepository.insert(user);
+      const userId = result.generatedMaps[0].id;
+      const newUser = await this.userRepository.findOneBy({ id: userId });
+      return newUser;
+    } catch (e) {
+      throw new UnprocessableEntityException('Email already taken');
+    }
   }
 }
