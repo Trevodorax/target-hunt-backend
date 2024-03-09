@@ -1,4 +1,4 @@
-import { Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -14,7 +14,7 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  findOneById(id: number): Promise<User | null> {
+  findOneById(id: string): Promise<User | null> {
     return this.userRepository.findOneBy({ id });
   }
 
@@ -33,7 +33,7 @@ export class UserService {
       const newUser = await this.userRepository.findOneBy({ id: userId });
       return newUser;
     } catch (e) {
-      throw new UnprocessableEntityException('Email already taken');
+      return null;
     }
   }
 }

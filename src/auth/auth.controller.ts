@@ -9,6 +9,7 @@ import {
   AuthRegisterPostResponse,
 } from 'target-hunt-bridge';
 import { Public } from './decorators/public.decorator';
+import { GetUser, UserPayload } from './decorators/user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -30,8 +31,8 @@ export class AuthController {
     return this.authService.login(validBody);
   }
 
-  @Get('protected')
-  protected(): string {
-    return 'you have access.';
+  @Get('me')
+  protected(@GetUser() user: UserPayload): UserPayload {
+    return user;
   }
 }
