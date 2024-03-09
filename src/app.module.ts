@@ -5,19 +5,14 @@ import { AuthService } from './auth/auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
+import { TypeOrmConfigService } from './config/database.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'mysql',
-      port: 3306,
-      username: 'root',
-      password: 'Respons11',
-      database: 'target_hunt_db',
-      synchronize: true,
-      autoLoadEntities: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useClass: TypeOrmConfigService,
     }),
     UserModule,
     AuthModule,

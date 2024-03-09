@@ -10,10 +10,10 @@ services:
   mysql:
     image: mysql
     environment:
-      MYSQL_DATABASE: target_hunt_db
-      MYSQL_ROOT_PASSWORD: Respons11
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
-      - 3306:3306
+      - ${DB_PORT}:3306
     volumes:
       - mysql_data:/var/lib/mysql
 volumes:
