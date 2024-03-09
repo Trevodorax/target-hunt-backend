@@ -9,12 +9,14 @@ import { AuthLoginPostBody, AuthRegisterPostBody } from 'target-hunt-bridge';
 import { User } from 'src/user/user.entity';
 import { UserPayload } from './decorators/user.decorator';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async register(body: AuthRegisterPostBody) {
@@ -29,7 +31,12 @@ export class AuthService {
     }
 
     const payload = userToPayload(user);
-    return { token: await this.jwtService.signAsync(payload) };
+    return {
+      token: await this.jwtService.signAsync(payload, {
+        expiresIn: '24h',
+        secret: this.configService.get<string>('JWT_SECRET'),
+      }),
+    };
   }
 
   async login(body: AuthLoginPostBody) {
@@ -46,7 +53,10 @@ export class AuthService {
     }
     const payload = userToPayload(user);
     return {
-      token: await this.jwtService.signAsync(payload),
+      token: await this.jwtService.signAsync(payload, {
+        expiresIn: '24h',
+        secret: this.configService.get<string>('JWT_SECRET'),
+      }),
     };
   }
 }

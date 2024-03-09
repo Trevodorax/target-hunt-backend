@@ -20,14 +20,14 @@ export class AuthController {
   register(
     @Body() body: AuthRegisterPostBody,
   ): Promise<AuthRegisterPostResponse> {
-    const validBody = AuthRegisterPostBodySchema.parse(body); // TODO: add ZodError to the exception catcher to avoid 500
+    const validBody = AuthRegisterPostBodySchema.parse(body);
     return this.authService.register(validBody);
   }
 
   @Public()
   @Post('login')
   login(@Body() body: AuthLoginPostBody): Promise<AuthLoginPostResponse> {
-    const validBody = AuthLoginPostBodySchema.parse(body); // TODO: add ZodError to the exception catcher to avoid 500
+    const validBody = AuthLoginPostBodySchema.parse(body);
     return this.authService.login(validBody);
   }
 
