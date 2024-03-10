@@ -5,11 +5,17 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import { AuthLoginPostBody, AuthRegisterPostBody } from 'target-hunt-bridge';
+import {
+  AuthLoginPostBody,
+  AuthMePatchBody,
+  AuthMePatchResponse,
+  AuthRegisterPostBody,
+} from 'target-hunt-bridge';
 import { User } from 'src/user/user.entity';
 import { UserPayload } from './decorators/user.decorator';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
+import { EditUserDto } from 'src/user/dto/EditUser.dto';
 
 @Injectable()
 export class AuthService {
@@ -58,6 +64,21 @@ export class AuthService {
         secret: this.configService.get<string>('JWT_SECRET'),
       }),
     };
+  }
+
+  async editMyInfo(
+    userId: string,
+    body: AuthMePatchBody,
+  ): Promise<AuthMePatchResponse> {
+    const newInfo: EditUserDto = {
+      pseudo: body.pseudo,
+      email: body.email,
+      passwordHash: body.password
+        ? await passwordToHash(body.password)
+        : undefined,
+    };
+
+    return this.userService.edit(userId, newInfo);
   }
 }
 

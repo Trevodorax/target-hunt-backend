@@ -1,10 +1,13 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   AuthLoginPostBody,
   AuthLoginPostBodySchema,
   AuthLoginPostResponse,
   AuthMeGetResponse,
+  AuthMePatchBody,
+  AuthMePatchBodySchema,
+  AuthMePatchResponse,
   AuthRegisterPostBody,
   AuthRegisterPostBodySchema,
   AuthRegisterPostResponse,
@@ -35,5 +38,13 @@ export class AuthController {
   @Get('me')
   me(@GetUser() user: UserPayload): AuthMeGetResponse {
     return user;
+  }
+
+  @Patch('me')
+  editMyInfo(
+    @GetUser('id') id: string,
+    @Body() body: AuthMePatchBody,
+  ): Promise<AuthMePatchResponse> {
+    return this.authService.editMyInfo(id, AuthMePatchBodySchema.parse(body));
   }
 }
