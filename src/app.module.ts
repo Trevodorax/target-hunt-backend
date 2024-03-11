@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmConfigService } from './config/database.config';
+import { FriendsModule } from './friends/friends.module';
+import { FriendRequestsModule } from './friendRequests/friendRequests.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { TypeOrmConfigService } from './config/database.config';
     }),
     UserModule,
     AuthModule,
+    FriendsModule,
+    FriendRequestsModule,
   ],
   providers: [AppService, AuthService],
 })
