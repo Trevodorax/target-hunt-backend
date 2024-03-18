@@ -1,12 +1,14 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User } from './user.entity';
+import { Like, Repository } from 'typeorm';
+import { User } from './users.entity';
 import { CreateUserDto } from './dto/CreateUser.dto';
 import { EditUserDto } from './dto/EditUser.dto';
+import { SearchUserDto } from './dto/SearchUser.dto';
+import { userToMinimalUser } from './dto/MinimalUser.dto';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -69,5 +71,16 @@ export class UserService {
 
     // save the updated user info
     return this.userRepository.save(user);
+  }
+
+  async search(search: SearchUserDto) {
+    const matchingUsers = await this.userRepository.find({
+      where: [
+        { pseudo: Like(`%${search.search}%`) },
+        { email: Like(`%${search.search}%`) },
+      ],
+    });
+
+    return matchingUsers.map(userToMinimalUser);
   }
 }

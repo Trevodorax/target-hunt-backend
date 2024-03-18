@@ -4,23 +4,23 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UsersService } from 'src/users/users.service';
 import {
   AuthLoginPostBody,
   AuthMePatchBody,
   AuthMePatchResponse,
   AuthRegisterPostBody,
 } from 'target-hunt-bridge';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/users/users.entity';
 import { UserPayload } from './decorators/user.decorator';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { EditUserDto } from 'src/user/dto/EditUser.dto';
+import { EditUserDto } from 'src/users/dto/EditUser.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private userService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
   ) {}

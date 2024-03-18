@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FriendRequest } from './entities/friendRequest.entity';
 import { Repository } from 'typeorm';
 import { FriendsService } from 'src/friends/friends.service';
-import { User } from 'src/user/user.entity';
-import { userToMinimalUser } from 'src/user/dto/MinimalUser.dto';
+import { User } from 'src/users/users.entity';
+import { userToMinimalUser } from 'src/users/dto/MinimalUser.dto';
 import { z } from 'zod';
 import { FriendRequestSchema } from 'target-hunt-bridge';
 
