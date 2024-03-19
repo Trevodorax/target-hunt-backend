@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { userToMinimalUser } from 'src/users/dto/MinimalUser.dto';
 import { User } from 'src/users/users.entity';
 import { Repository } from 'typeorm';
 
@@ -16,7 +17,11 @@ export class FriendsService {
       relations: ['friends'],
     });
 
-    return user?.friends.map(({ passwordHash: _ignored, ...rest }) => rest); // eslint-disable-line
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user.friends.map(userToMinimalUser);
   }
 
   async addFriend(userId: string, friendId: string): Promise<void> {

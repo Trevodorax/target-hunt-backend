@@ -1,6 +1,10 @@
 import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { FriendsService } from './friends.service';
 import { GetUser } from 'src/auth/decorators/user.decorator';
+import { UserSchema } from 'target-hunt-bridge';
+import { z } from 'zod';
+
+type User = z.infer<typeof UserSchema>;
 
 @Controller('friends')
 export class FriendsController {
@@ -11,7 +15,7 @@ export class FriendsController {
   }
 
   @Get()
-  getFriends(@GetUser('id') id: string) {
+  getFriends(@GetUser('id') id: string): Promise<User[]> {
     return this.friendsService.getAllFriends(id);
   }
 }

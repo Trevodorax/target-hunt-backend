@@ -3,13 +3,17 @@ import {
   Catch,
   ArgumentsHost,
   HttpException,
+  NotFoundException,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { ZodError } from 'zod';
 
 @Catch(HttpException, ZodError)
 export class CustomExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException | ZodError, host: ArgumentsHost) {
+  catch(
+    exception: HttpException | NotFoundException | ZodError,
+    host: ArgumentsHost,
+  ) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status =

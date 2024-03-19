@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FriendRequest } from './entities/friendRequest.entity';
 import { Repository } from 'typeorm';
@@ -53,13 +57,18 @@ export class FriendRequestsService {
     }));
   }
 
-  async acceptInvite(inviteId: string): Promise<void> {
+  async acceptInvite(inviteId: string, userId: string): Promise<void> {
     const invite = await this.friendRequestRepository.findOne({
       where: { id: inviteId },
       relations: ['sender', 'receiver'],
     });
     if (!invite) {
       throw new NotFoundException('Invite not found');
+    }
+    if (invite.receiver.id !== userId) {
+      throw new ForbiddenException(
+        'Cannot accept a request that was not sent to you.',
+      );
     }
 
     this.friendsService.addFriend(invite.receiver.id, invite.sender.id);

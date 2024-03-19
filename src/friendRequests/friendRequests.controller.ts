@@ -31,8 +31,11 @@ export class FriendRequestsController {
   }
 
   @Post('accept/:inviteId')
-  acceptInvite(@Param('inviteId') inviteId: string): Promise<void> {
-    return this.friendRequestsService.acceptInvite(inviteId);
+  acceptInvite(
+    @Param('inviteId') inviteId: string,
+    @GetUser('id') userId: string,
+  ): Promise<void> {
+    return this.friendRequestsService.acceptInvite(inviteId, userId);
   }
 
   @Delete('refuse/:inviteId')
